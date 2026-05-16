@@ -57,14 +57,6 @@ def opcaoEscolhida (mnu):
     print()
     return umTexto('Qual é a sua opção? ', 'Opção inválida', opcoesValidas)
 
-'''
-procura nom em agd e, se achou, retorna:
-uma lista contendo True e a posicao onde achou;
-MAS, se não achou, retorna:
-uma lista contendo False e a posição onde inserir,
-aquilo que foi buscado, mas nao foi encontrado,
-mantendo a ordenação da lista.
-'''
 def ondeEsta (nom,agd):
     inicio=0
     final =len(agd)-1
@@ -76,7 +68,7 @@ def ondeEsta (nom,agd):
             return [True,meio]
         elif nom.upper()<agd[meio][0].upper():
             final=meio-1
-        else: # nom.upper()>agd[meio][0].upper()
+        else:
             inicio=meio+1
             
     return [False,inicio]
@@ -107,10 +99,6 @@ def cadastrar (agd):
     print('Cadastro realizado com sucesso!')
 
 def procurar (agd):
-    # Ficar pedindo para digitar um nome até digitar um nome que existe
-    # cadastrado;
-    # mostrar então na tela TODOS os demais dados encontrados 
-    # sobre aquela pessoa.
     chave_para_digitar_ate_acertar_ligada=True
     while chave_para_digitar_ate_acertar_ligada:
         nome=input('\nNome.......: ')
@@ -129,19 +117,47 @@ def procurar (agd):
             print('Celular....: ',agd[posicao][4])
             print('e-mail.....: ',agd[posicao][5])
 
-
-
-
-    
-
 def atualizar (agd):
-    print('Opção não implementada!')
-    # Ficar mostrando um SUBMENU oferecendo as opções de atualizar aniversário, ou
-    # endereco, ou telefone, ou celular, ou email, ou finalizar as
-    # atualizações; ficar pedindo para digitar a opção até digitar uma
-    # opção válida; realizar a atulização solicitada; até ser escolhida a
-    # opção de finalizar as atualizações.
-    # USAR A FUNÇÃO opcaoEscolhida, JÁ IMPLEMENTADA, PARA FAZER O SUBMENU
+    while True:
+        nome=input('\nNome.......: ')
+        resposta=ondeEsta(nome,agd)
+        achou   = resposta[0]
+        posicao = resposta[1]
+
+        if not achou:
+            print ('Pessoa não cadastrada; tente novamente!')
+        else:
+            break
+
+    submenu=['Atualizar aniversário',
+             'Atualizar endereço',
+             'Atualizar telefone',
+             'Atualizar celular',
+             'Atualizar email',
+             'Finalizar atualizações']
+
+    finalizar=False
+    while not finalizar:
+        opcao=int(opcaoEscolhida(submenu))
+
+        if opcao==1:
+            agd[posicao][1]=input('Novo aniversário: ')
+            print('Atualização realizada!')
+        elif opcao==2:
+            agd[posicao][2]=input('Novo endereço...: ')
+            print('Atualização realizada!')
+        elif opcao==3:
+            agd[posicao][3]=input('Novo telefone...: ')
+            print('Atualização realizada!')
+        elif opcao==4:
+            agd[posicao][4]=input('Novo celular....: ')
+            print('Atualização realizada!')
+        elif opcao==5:
+            agd[posicao][5]=input('Novo e-mail.....: ')
+            print('Atualização realizada!')
+        else:
+            finalizar=True
+            print('Atualizações finalizadas!')
 
 def listar (agd):
     if len(agd)==0:
@@ -160,16 +176,30 @@ def listar (agd):
         print('-----------------------------')
 
 def excluir (agd):
-    print('Opção não implementada!')
-    # solicitar o nome do contato a excluir; não estando cadastrado o contato, avisar
-    # através de uma mensagem de erro e, estando cadastrado, ficar pedindo confirmação,
-    # ou S ou N, da exclusão, até que uma confirmação válida, ou S ou N, seja digitada;
-    # no caso de ser digitado S, realizar a exclusão e mostrar mensagem indicando que
-    # a exclusão foi realizada com sucesso e, no caso de ser digitado N, não modificar a
-    # agenda e mostrar mensagem indicando que a exclusão não foi realizada.
+    while True:
+        nome=input('\nNome.......: ')
+        resposta=ondeEsta(nome,agd)
+        achou   = resposta[0]
+        posicao = resposta[1]
 
-# daqui para cima, definimos subprogramas (ou módulos, é a mesma coisa)
-# daqui para baixo, implementamos o programa (nosso CRUD, C=create(cadastrar), R=read(recuperar), U=update(atualizar), D=delete(remover,apagar)
+        if not achou:
+            print ('Pessoa não cadastrada; tente novamente!')
+        else:
+            break
+
+    while True:
+        confirmacao=input('Confirma exclusão (S/N)? ').upper()
+
+        if confirmacao!='S' and confirmacao!='N':
+            print('Opção inválida - Favor redigitar...')
+        else:
+            break
+
+    if confirmacao=='S':
+        agd.pop(posicao)
+        print('Exclusão realizada com sucesso!')
+    else:
+        print('Exclusão cancelada!')
 
 apresenteSe()
 
@@ -196,7 +226,7 @@ while chave_para_executar_opcoes_ate_escolher_sair_ligada:
         listar(agenda)
     elif opcao==5:
         excluir(agenda)
-    else: # opcao==6
+    else:
         chave_para_executar_opcoes_ate_escolher_sair_ligada=False
         
 print('PROGRAMA ENCERRADO COM SUCESSO!')
